@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+    volumes:
+      - .:/app # Mount the project directory for live reloading
+      - /app/node_modules # Avoid mounting node_modules as a volume directly
+    command: ['pnpm', 'dev']
+
+  prod:
+    build:
+      context: .
+      dockerfile: Dockerfile # Use Dockerfile for production
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
